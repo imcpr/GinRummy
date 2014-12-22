@@ -16,6 +16,7 @@ public class GreedyBot extends Player
 			knock();
 		}
 		else
+//		if(true)
 		{
 			Card highest = new Card(Rank.ACE, Suit.CLUBS);
 			for(Card c: aHand)
@@ -27,13 +28,13 @@ public class GreedyBot extends Player
 			}
 			if(GameEngine.getInstance().getDiscardCard()== null || GameEngine.getInstance().getDiscardCard().getRank().ordinal() <= highest.getRank().ordinal())
 			{
-				discard(highest);
-				draw();
+				discard(highest, false);
+//				draw(null);
 			}
 			else
 			{
 				Card old = GameEngine.getInstance().getDiscardCard();
-				discard(highest);
+				discard(highest, false);
 				aHand.add(old);
 				System.out.println("Getting card from discard pile "+old);
 				GameEngine.getInstance().setDiscardCard(highest);

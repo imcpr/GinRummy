@@ -21,14 +21,23 @@ public class Player
 		return aHand;
 	}
 	
-	public void discard(Card c)
+	public void discard(Card c, Boolean draw)
 	{
 		if(aHand.contains(c))
 		{
 			System.out.println("Discarding card "+c);
 			aHand.remove(c);
-			GameEngine.getInstance().setDiscardCard(c);
-			draw();
+			if (draw)
+			{
+				GameEngine.getInstance().setDiscardCard(c);
+				draw(null);
+			}
+			else
+			{
+				Card cc = GameEngine.getInstance().getDiscardCard();
+				GameEngine.getInstance().setDiscardCard(c);
+				draw(cc);
+			}
 		}
 		else
 		{
@@ -36,10 +45,19 @@ public class Player
 		}
 	}
 	
-	public void draw()
+	public void draw(Card cc)
 	{
-		Card d= GameEngine.getInstance().drawTop();
-		System.out.println("Drawing from deck"+d);
+		Card d = null;
+		if (cc == null)
+		{
+			d= GameEngine.getInstance().drawTop();
+			System.out.println("Drawing from deck"+d);
+		}
+		else
+		{
+			d = cc;
+			System.out.println("Drawing from discard"+d);
+		}
 		aHand.add(d);
 		GameEngine.getInstance().notifyObservers();
 	}

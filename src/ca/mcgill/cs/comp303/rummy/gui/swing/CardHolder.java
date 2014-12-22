@@ -1,6 +1,8 @@
 package ca.mcgill.cs.comp303.rummy.gui.swing;
 
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -8,10 +10,12 @@ import java.util.Iterator;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import ca.mcgill.cs.comp303.rummy.model.Card;
 import ca.mcgill.cs.comp303.rummy.model.Deck;
 import ca.mcgill.cs.comp303.rummy.model.GameEngine;
+import ca.mcgill.cs.comp303.rummy.model.GreedyBot;
 import ca.mcgill.cs.comp303.rummy.model.Hand;
 import ca.mcgill.cs.comp303.rummy.model.Observer;
 import ca.mcgill.cs.comp303.rummy.model.Player;
@@ -56,7 +60,7 @@ public class CardHolder extends JPanel implements Observer
 	
 		for(Card lCard : getPlayer().getHand())
 		{
-			System.out.println("Re-added "+lCard);
+//			System.out.println("Re-added "+lCard);
 //			Card lCard = aDeck.draw();
 			aCards.add(lCard);
 			JLabel lLabel = new JLabel();
@@ -79,12 +83,14 @@ public class CardHolder extends JPanel implements Observer
 		@Override
 		public void mouseClicked(MouseEvent e)
 		{
+			if (GameUI.drawPile == null)
+				return;
 			for(JLabel aImage : aCardImages)
 			{
 				if (aImage == e.getSource())
 				{
 					Card dCard = aCards.get(aCardImages.indexOf(aImage));
-					getPlayer().discard(dCard);
+					getPlayer().discard(dCard, GameUI.drawPile);
 					JLabel aniTemp = new JLabel();
 					aniTemp.setIcon(CardImages.getCard(dCard));
 					aniTemp.setLocation(aImage.getLocation());
@@ -92,6 +98,18 @@ public class CardHolder extends JPanel implements Observer
 					add(aniTemp);
 					Thread ani = new Thread(new CardSlideUp(aniTemp));
 					ani.start();
+					if (!(getPlayer() instanceof GreedyBot))
+					{
+						Timer t = new Timer(1000, new ActionListener()
+						{
+							public void actionPerformed(ActionEvent e)
+							{
+								GameEngine.getInstance().getComputerPlayer().play();
+							}
+						});
+						t.setRepeats(false);
+						t.start();
+					}
 				}
 				
 			}

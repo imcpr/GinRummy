@@ -10,7 +10,7 @@ public class GameEngine
 	
 	Deck aDeck = new Deck();
 	Player aPlayer;
-	Player aComputer;
+	GreedyBot aComputer;
 //	GreedyBot aPlayer;
 //	GreedyBot aComputer;
 	Card aTopDiscard;
@@ -125,7 +125,7 @@ public class GameEngine
 		return aPlayer;
 	}
 	
-	public Player getComputerPlayer()
+	public GreedyBot getComputerPlayer()
 	{
 		return aComputer;
 	}
